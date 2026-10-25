@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Geldfluss: Sieh, wohin dein Geld fließt</title>
+<meta name="description" content="Einnahmen, Fixkosten und Ausgaben als ein Fluss. Du siehst jeden Monat, was übrig bleibt. Kostenlos, ohne Konto, alles bleibt in deinem Browser.">
+<meta name="author" content="Nikita Berger">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="canonical" href="https://nikity.is-a.dev/geldfluss/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_AT">
+<meta property="og:url" content="https://nikity.is-a.dev/geldfluss/">
+<meta property="og:title" content="Geldfluss: Sieh, wohin dein Geld fließt">
+<meta property="og:description" content="Einnahmen, Fixkosten und Ausgaben als ein Fluss. Kostenlos, ohne Konto, nur in deinem Browser.">
+<meta property="og:image" content="https://nikity.is-a.dev/geldfluss/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://nikity.is-a.dev/geldfluss/assets/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="app/icons/apple-touch-icon.png">
+<link rel="preload" as="image" href="assets/screens/month-light.webp" fetchpriority="high">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt</a>
+
+<header class="bar">
+  <nav class="bar-in" aria-label="Seite">
+    <a class="brand" href="./" aria-label="Geldfluss, Startseite">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#fff"/><rect x="6" y="8" width="2" height="16" fill="#1d1d1f"/><path d="M8 8c7 0 8-1 17-1v4c-9 0-10 2-17 2z" fill="#d1d1d6"/><path d="M8 13c7 0 9 2 17 2v3c-8 0-10-1-17-1z" fill="#d1d1d6"/><path d="M8 17c7 0 9 4 17 4v4c-8 0-10-1-17-1z" fill="#FF6A13"/></svg>
+      Geldfluss
+    </a>
+    <div class="bar-links">
+      <a href="#probieren">Probieren</a>
+      <a href="#daten">Deine Daten</a>
+      <a href="#installieren">Installieren</a>
+      <a class="bar-cta" href="app/">Öffnen</a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- 1. What it is: the real app, three screens. -->
+<section class="hero" aria-labelledby="hero-h">
+  <h1 id="hero-h">Sieh, wohin dein Geld fließt.</h1>
+  <p class="hero-s">Einnahmen, Fixkosten und Ausgaben als ein Fluss. Du siehst jeden Monat, was übrig bleibt. Kostenlos, ohne Konto, nur in deinem Browser.</p>
+  <div class="acts">
+    <a class="btn" href="app/">Geldfluss öffnen</a>
+    <a class="more" href="#probieren">Mit deinen Zahlen probieren <span aria-hidden="true">›</span></a>
+  </div>
+  <div class="trio">
+    <figure class="phone side l dark-phone"><img src="assets/screens/entry-dark.webp" width="1170" height="2532" alt="Eine Ausgabe eintragen im Dunkelmodus: 12,40 Euro, Kategorie Lebensmittel, Notiz Bäckerei Ströck" loading="lazy"></figure>
+    <figure class="phone main"><img src="assets/screens/month-light.webp" width="1170" height="2532" alt="Der Monat Oktober: 906,75 Euro übrig, 129,53 Euro pro Tag, darunter der Fluss vom Gehalt in Wohnen, Lebensmittel, Essen gehen und weitere" fetchpriority="high"></figure>
+    <figure class="phone side r dark-phone"><img src="assets/screens/fixed-dark.webp" width="1170" height="2532" alt="Die Fixkosten im Dunkelmodus: 1.583,78 Euro jeden Monat fix" loading="lazy"></figure>
+  </div>
+</section>
+
+<!-- 2. With my numbers: the real flow from the app, live. -->
+<section class="try" id="probieren" aria-labelledby="try-h">
+  <div class="try-in">
+    <div class="try-copy">
+      <h2 id="try-h">Probier es mit deinen Zahlen.</h2>
+      <p>Trag dein Netto ein und schieb die großen Posten. Der Fluss ist derselbe wie in der App: Jeder Arm ist so breit wie das Geld, das dorthin geht. Orange ist, was dir bleibt.</p>
+      <p class="try-note">Nichts davon wird gespeichert oder gesendet.</p>
+    </div>
+    <div class="try-card">
+      <label class="try-income" for="t-income">
+        <span>Netto im Monat</span>
+        <span class="try-amount"><input id="t-income" type="text" inputmode="decimal" value="2.900" autocomplete="off" aria-describedby="t-left"><b aria-hidden="true">€</b></span>
+      </label>
+      <div class="sliders" id="sliders"></div>
+      <p class="try-left" id="t-left" aria-live="polite"></p>
+      <div class="try-flow" id="t-flow" role="img" aria-label="Der Fluss mit deinen Zahlen"></div>
+      <noscript><p class="try-note">Zum Probieren braucht diese Seite JavaScript. Die App selbst auch: Sie läuft komplett in deinem Browser.</p></noscript>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Everyday use. -->
+<section class="days" aria-labelledby="days-h">
+  <h2 id="days-h" class="sec-title">Der Monat in drei Handgriffen.</h2>
+  <div class="feature">
+    <figure class="phone"><img src="assets/screens/fixed-light.webp" width="1170" height="2532" alt="Fixkosten: 1.583,78 Euro jeden Monat fix, 1.316,22 Euro bleiben für alles andere" loading="lazy"></figure>
+    <div class="feature-copy">
+      <h3>Fixkosten einmal eintragen.</h3>
+      <p>Gehalt, Miete, Versicherungen, Abos. Monatlich, vierteljährlich oder jährlich: Sie fließen von selbst in jeden Monat. Steigt die Miete, gilt der neue Betrag ab dem Monat, den du wählst, und die Vergangenheit bleibt, wie sie war.</p>
+    </div>
+  </div>
+  <div class="feature flip">
+    <figure class="phone"><img src="assets/screens/entry-light.webp" width="1170" height="2532" alt="Neue Ausgabe mit Betrag, Kategorie, Datum und Notiz" loading="lazy"></figure>
+    <div class="feature-copy">
+      <h3>Ausgaben in Sekunden.</h3>
+      <p>Betrag tippen, Kategorie wählen, fertig. Der Fluss verzweigt sich neu und du siehst sofort, was pro Tag noch frei ist. Falsch eingetragen? Zur Seite wischen oder rückgängig machen.</p>
+    </div>
+  </div>
+  <div class="feature">
+    <figure class="phone"><img src="assets/screens/history-light.webp" width="1170" height="2532" alt="Verlauf mit Durchschnitt pro Kategorie" loading="lazy"></figure>
+    <div class="feature-copy">
+      <h3>Der Verlauf sagt dir die Wahrheit.</h3>
+      <p>Monat für Monat, was rein kam, was raus ging und was blieb. Dazu dein Schnitt pro Kategorie, und ein Satz, wenn etwas aus der Reihe fällt: „Essen gehen liegt schon 24 % über deinem Schnitt.“</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Where my data lives. -->
+<section class="dark" id="daten" aria-labelledby="data-h">
+  <div class="dark-in">
+    <div>
+      <p class="dark-k">Übrig im Oktober</p>
+      <p class="dark-num" aria-hidden="true">906<small>,75 €</small></p>
+      <h2 id="data-h">Deine Zahlen gehören dir.</h2>
+      <ul class="facts">
+        <li><b>Kein Konto, kein Server.</b> Alles liegt nur in deinem Browser, auf deinem Gerät.</li>
+        <li><b>Kein Tracking, keine Werbung.</b> Die Seite lädt nichts von anderen Diensten.</li>
+        <li><b>Sicherung als Datei.</b> Ein Tipp, und du hast alles als JSON, oder als Tabelle für Excel.</li>
+        <li><b>Offen.</b> Der ganze Quellcode liegt auf GitHub, unter der MIT-Lizenz.</li>
+      </ul>
+      <p class="dark-honest">Weil nichts auf einem Server liegt, gleicht Geldfluss nicht zwischen Geräten ab. Mit der Sicherungsdatei nimmst du deine Daten auf ein anderes Gerät mit.</p>
+    </div>
+    <figure class="phone dark-phone"><img src="assets/screens/month-dark.webp" width="1170" height="2532" alt="Der Monat im Dunkelmodus" loading="lazy"></figure>
+  </div>
+</section>
+
+<!-- 5. How to get it. -->
+<section class="install" id="installieren" aria-labelledby="inst-h">
+  <h2 id="inst-h" class="sec-title">Auf dein Handy, ohne App Store.</h2>
+  <p class="sec-sub">Geldfluss ist eine Web-App. Einmal zum Home-Bildschirm hinzufügen, dann öffnet sie sich wie jede andere App, auch offline.</p>
+  <ol class="steps">
+    <li>
+      <h3>iPhone und iPad</h3>
+      <p>In Safari öffnen, auf Teilen tippen, dann „Zum Home-Bildschirm“.</p>
+    </li>
+    <li>
+      <h3>Android</h3>
+      <p>In Chrome öffnen, im Menü „App installieren“ wählen.</p>
+    </li>
+    <li>
+      <h3>Computer</h3>
+      <p>In Chrome oder Edge öffnen und in der Adressleiste auf „Installieren“ klicken. Oder einfach im Browser nutzen.</p>
+    </li>
+  </ol>
+  <div class="acts center">
+    <a class="btn" href="app/">Geldfluss öffnen</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <p>Geldfluss ist kostenlos und quelloffen. Ein Projekt von Nikita Berger.</p>
+    <p><a href="https://github.com/Nikityyy/geldfluss">Quellcode auf GitHub</a> · <a href="https://github.com/Nikityyy/geldfluss/blob/main/LICENSE">MIT-Lizenz</a></p>
+    <p class="foot-small">Die Zahlen auf dieser Seite sind Beispieldaten.</p>
+  </div>
+</footer>
+
+<script type="module" src="assets/site.js"></script>
+</body>
+</html>

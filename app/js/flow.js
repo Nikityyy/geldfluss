@@ -143,14 +143,15 @@ export function mountFlow(host, summary, { onPick, animate = true } = {}) {
     svg.append(b);
     sinkBars.set(s.key, b);
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
+    // Without a handler (the landing page) the labels are plain text.
+    const btn = document.createElement(onPick ? 'button' : 'span');
+    if (onPick) btn.type = 'button';
     btn.className = `flow-label ${s.kind}`;
     btn.dataset.key = s.key;
     btn.innerHTML = `<span class="nm"></span><span class="am n"></span>`;
     btn.querySelector('.nm').textContent = s.label;
     btn.querySelector('.am').textContent = formatPlain(s.cents);
-    btn.setAttribute('aria-label', `${s.label}: ${formatPlain(s.cents)} Euro`);
+    if (onPick) btn.setAttribute('aria-label', `${s.label}: ${formatPlain(s.cents)} Euro`);
     btn.addEventListener('click', () => onPick?.(s.key, s));
     const hot = (on) => { p.classList.toggle('hot', on); };
     btn.addEventListener('pointerenter', () => hot(true));
