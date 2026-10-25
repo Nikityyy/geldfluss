@@ -63,14 +63,14 @@ export function category(id) {
 }
 
 // ---------------------------------------------------------------------------
-// Theme: system, light or dark. The browser chrome follows the water colour.
+// Theme: system, light or dark. The browser chrome follows the ground colour.
 
 export function applyTheme() {
   const t = app.state?.settings.theme || 'system';
   if (t === 'system') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', t);
   try { localStorage.setItem('geldfluss:theme', JSON.stringify(t)); } catch { /* blocked */ }
-  const water = getComputedStyle(document.documentElement).getPropertyValue('--water').trim() || '#1F3FA6';
+  const water = getComputedStyle(document.documentElement).getPropertyValue('--ground').trim() || '#F2F2F7';
   for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.remove();
   const meta = document.createElement('meta');
   meta.name = 'theme-color';

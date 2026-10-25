@@ -54,14 +54,38 @@ export function mark() {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   s.setAttribute('viewBox', '0 0 32 32');
   s.setAttribute('aria-hidden', 'true');
-  s.innerHTML = '<rect width="32" height="32" rx="8" fill="var(--ink)"/><path d="M6 9h3c6 0 7 2.5 17 2.5v3C16 14.5 15 12 9 12H6z" fill="var(--water)"/><path d="M6 12h3c6 0 8 4 17 4v3c-9 0-11-4-17-4H6z" fill="var(--water)" opacity=".55"/><path d="M6 15h3c6 0 8 6.5 17 6.5V25c-9 0-11-7-17-7H6z" fill="var(--accent)" stroke="var(--water)" stroke-width=".6"/>';
+  s.innerHTML = '<rect width="32" height="32" rx="8" fill="var(--raised)"/><rect x="6" y="8" width="2" height="16" fill="var(--bar)"/><path d="M8 8c7 0 8-1 17-1v4c-9 0-10 2-17 2z" fill="var(--stream-hi)"/><path d="M8 13c7 0 9 2 17 2v3c-8 0-10-1-17-1z" fill="var(--stream-hi)"/><path d="M8 17c7 0 9 4 17 4v4c-8 0-10-1-17-1z" fill="var(--accent)"/>';
   return s;
 }
 
 export const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Haptics. Android has navigator.vibrate. iPhone (iOS 18 and later) has no
+// API, but toggling a native <input type="checkbox" switch> plays the system
+// tick, so a hidden switch is flipped inside the same tap.
+let hapticSwitch = null;
+const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
 export function haptic(ms = 12) {
-  try { if (!reduceMotion()) navigator.vibrate?.(ms); } catch { /* not supported */ }
+  try {
+    if (navigator.vibrate) { navigator.vibrate(ms); return; }
+    if (!isIOS()) return;
+    if (!hapticSwitch) {
+      const input = h('input', { type: 'checkbox', tabindex: '-1', 'aria-hidden': 'true' });
+      input.setAttribute('switch', '');
+      hapticSwitch = h('label', { 'aria-hidden': 'true', style: { position: 'fixed', left: '-100px', top: '0', width: '1px', height: '1px', opacity: '0', pointerEvents: 'none' } }, input);
+      document.body.append(hapticSwitch);
+    }
+    hapticSwitch.click();
+  } catch { /* not supported */ }
+}
+
+// While a sheet is up, the page behind it steps back, as on iOS.
+function syncBehind() {
+  const shell = document.getElementById('app');
+  const on = openSheets.length > 0;
+  if (on && shell) shell.style.transformOrigin = `50% ${scrollY + innerHeight / 2}px`;
+  document.documentElement.classList.toggle('sheet-open', on);
 }
 
 // ---------------------------------------------------------------------------
@@ -89,6 +113,7 @@ export function sheet({ title, body, foot, onClose, label }) {
       const i = openSheets.indexOf(api);
       if (i >= 0) openSheets.splice(i, 1);
       dlg.classList.remove('in');
+      syncBehind();
       const done = () => { dlg.close(); dlg.remove(); };
       if (reduceMotion()) done(); else setTimeout(done, 280);
       if (!fromHistory && history.state?.sheet) history.back();
@@ -122,6 +147,7 @@ export function sheet({ title, body, foot, onClose, label }) {
   requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('in')));
   history.pushState({ ...(history.state || {}), sheet: true }, '');
   openSheets.push(api);
+  syncBehind();
   return api;
 }
 

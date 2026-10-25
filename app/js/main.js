@@ -77,6 +77,7 @@ app.render = ({ animate = false } = {}) => {
   const titles = { fixed: 'Fixkosten · Geldfluss', history: 'Verlauf · Geldfluss', settings: 'Einstellungen · Geldfluss' };
   document.title = route.name === 'month' ? 'Geldfluss' : titles[route.name];
   if (sameView) window.scrollTo(0, scroll); else if (route.name !== 'settings' || !route.sub) window.scrollTo(0, 0);
+  document.documentElement.classList.toggle('scrolled', scrollY > 56);
 };
 
 // ---------------------------------------------------------------------------
@@ -110,8 +111,18 @@ async function start() {
 
   addEventListener('hashchange', () => {
     closeAllSheets();
-    app.render({ animate: true });
+    const before = app.route.name;
+    const next = parseRoute().name;
+    // Between places the page cross-fades; within the month the flow morphs.
+    if (before !== next && document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.startViewTransition(() => app.render({ animate: true }));
+    } else {
+      app.render({ animate: true });
+    }
   });
+
+  const onScroll = () => document.documentElement.classList.toggle('scrolled', scrollY > 56);
+  addEventListener('scroll', onScroll, { passive: true });
   addEventListener('popstate', (e) => {
     if (!e.state?.sheet) closeTopSheet();
   });

@@ -39,14 +39,14 @@ export function renderMonth(root, key, { animate }) {
   // Month switcher: arrows, a swipe on the flow, and the arrow keys.
   const prev = addMonths(key, -1);
   const next = addMonths(key, 1);
-  colA.append(h('div', { class: 'top' },
-    h('div', { class: 'months' },
+  view.prepend(h('div', { class: 'top' },
+    h('span', { class: 'inline-title', 'aria-hidden': 'true' }, monthLabel(key)),
+    key !== now ? h('a', { class: 'ibtn today-link', href: '#/' }, 'Heute') : null,
+    h('div', { class: 'capsule' },
       h('a', { class: 'ibtn', href: `#/monat/${prev}`, 'aria-label': `Vorheriger Monat: ${monthLabel(prev)}` }, icon('left')),
-      h('h1', { 'aria-live': 'polite' }, monthLabel(key)),
       h('a', { class: 'ibtn', href: `#/monat/${next}`, 'aria-label': `Nächster Monat: ${monthLabel(next)}` }, icon('right'))),
-    h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
-      key !== now ? h('a', { class: 'today-link', href: '#/' }, 'Heute') : null,
-      h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings')))));
+    h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings'))));
+  colA.before(h('h1', { class: 'title', 'aria-live': 'polite' }, monthName(key), ' ', h('span', { class: 'yr' }, key.slice(0, 4))));
 
   const empty = sum.income === 0 && sum.out === 0;
   const hasAny = s.entries.length > 0 || s.recurring.length > 0;
@@ -69,17 +69,18 @@ export function renderMonth(root, key, { animate }) {
 
   const sub = [];
   if (sum.current && sum.planned > 0) {
-    const nextItem = sum.items.filter((i) => i.planned && i.type !== 'income').at(-1);
-    sub.push(`Noch fällige Fixkosten sind eingerechnet: ${formatMoney(sum.planned)}${nextItem ? `, als Nächstes ${nextItem.note || category(nextItem.categoryId)?.name} am ${dayOf(nextItem.date)}.` : '.'}`);
+    sub.push(`Schon abgezogen: ${formatMoney(sum.planned)}, die bis Monatsende noch fällig werden.`);
   }
   const ins = !empty ? insight(s, sum, app.today) : null;
 
-  if (!empty || hasAny) {
-    colA.append(h('section', { class: 'hero', 'aria-label': 'Übersicht' },
+  const card = h('section', { class: 'card summary', 'aria-label': 'Übersicht' });
+  if (!empty) {
+    card.append(h('div', { class: 'hero' },
       h('p', { class: 'hero-k' }, heroK),
       heroV,
       line ? h('p', { class: 'hero-d' }, line) : null,
       sub.map((t) => h('p', { class: 'hero-s' }, t))));
+    colA.append(card);
   }
 
   // Notes: sample data, and the backup reminder (data lives only here).
@@ -88,7 +89,7 @@ export function renderMonth(root, key, { animate }) {
 
   if (empty) {
     colA.append(h('section', { class: 'empty' },
-      h('p', { class: 'title', style: { marginTop: '0', color: 'var(--ink)' } }, hasAny ? `Im ${name} fließt noch nichts.` : 'Noch nichts eingetragen.'),
+      h('p', { class: 'title' }, hasAny ? `Im ${name} fließt noch nichts.` : 'Noch nichts eingetragen.'),
       h('p', { style: { marginTop: '12px' } }, hasAny
         ? (compareMonths(key, now) > 0 ? 'Für diesen Monat ist noch nichts geplant. Fixposten tauchen hier auf, sobald sie fällig werden.' : 'In diesem Monat gibt es keine Buchungen und keine Fixposten.')
         : 'Sag zuerst, wie viel jeden Monat reinkommt. Dann siehst du, wohin es fließt.'),
@@ -102,7 +103,7 @@ export function renderMonth(root, key, { animate }) {
       sum.left < 0 ? h('span', { class: 'neg' }, `Fehlt `, h('b', { class: 'neg' }, formatPlain(-sum.left))) : null,
       sum.income === 0 ? h('span', {}, 'Noch keine Einnahmen') : null);
     const host = h('div', { role: 'img', 'aria-label': describeFlow(sum) });
-    colA.append(h('section', { class: 'flow-wrap', 'aria-label': 'Geldfluss' }, incomeLine, host, ins ? h('p', { class: 'flow-cap' }, ins) : null));
+    card.append(h('div', { class: 'flow-wrap', role: 'group', 'aria-label': 'Geldfluss' }, incomeLine, host, ins ? h('p', { class: 'flow-cap' }, ins) : null));
     requestAnimationFrame(() => {
       resizeFlow = mountFlow(host, sum, {
         animate,
@@ -246,7 +247,7 @@ export function renderFixed(root) {
   const o = fixedOverview(app.state, key);
   const view = h('main', { class: 'view narrow', id: 'main' });
   root.append(view);
-  view.append(h('div', { class: 'top top-row' }, h('span', { class: 'top-title' }, `Stand ${monthLabel(key)}`), h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings'))));
+  view.append(h('div', { class: 'top' }, h('span', { class: 'inline-title', 'aria-hidden': 'true' }, 'Fixkosten'), h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings'))));
   view.append(h('h1', { class: 'title' }, 'Fixkosten'));
 
   const any = o.incomes.length + o.expenses.length + o.upcoming.length + o.ended.length > 0;
@@ -258,11 +259,12 @@ export function renderFixed(root) {
     return;
   }
 
-  view.append(h('p', { class: 'lede n' },
-    'Jeden Monat fix: ', h('b', {}, formatMoney(o.expense)), '. ',
-    o.income > 0 ? (o.free >= 0 ? ['Für alles andere bleiben ', h('b', {}, formatMoney(o.free)), '.'] : ['Das sind ', h('b', {}, formatMoney(-o.free)), ' mehr, als fix reinkommt.']) : 'Noch kein festes Einkommen eingetragen.'));
-
-  if (o.income > 0) view.append(splitStrip(o));
+  const card = h('section', { class: 'card', 'aria-label': 'Übersicht' },
+    h('p', { class: 'hero-k' }, `Jeden Monat fix, Stand ${monthLabel(key)}`),
+    h('p', { class: 'hero-v n' }, (() => { const m = splitMoney(o.expense); return [m.euros, h('span', { class: 'c' }, `${m.cents} €`)]; })()),
+    h('p', { class: 'hero-d n' }, o.income > 0 ? (o.free >= 0 ? ['Für alles andere bleiben ', h('b', {}, formatMoney(o.free)), '.'] : [h('b', {}, formatMoney(-o.free)), ' mehr, als fix reinkommt.']) : 'Noch kein festes Einkommen eingetragen.'));
+  if (o.income > 0) card.append(splitStrip(o));
+  view.append(card);
 
   const section = (title, rows, opts = {}) => rows.length ? h('section', { class: 'sec' },
     h('div', { class: 'sec-h' }, h('h2', {}, title), opts.aside ? h('span', { class: 'aside n' }, opts.aside) : null),
@@ -330,7 +332,7 @@ export function renderHistory(root) {
   const now = summarize(app.state, key, app.today);
   const view = h('main', { class: 'view narrow', id: 'main' });
   root.append(view);
-  view.append(h('div', { class: 'top top-row' }, h('span', { class: 'top-title' }, 'Die letzten zwölf Monate'), h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings'))));
+  view.append(h('div', { class: 'top' }, h('span', { class: 'inline-title', 'aria-hidden': 'true' }, 'Verlauf'), h('a', { class: 'ibtn', href: '#/einstellungen', 'aria-label': 'Einstellungen' }, icon('settings'))));
   view.append(h('h1', { class: 'title' }, 'Verlauf'));
 
   if (avg.months === 0) {
@@ -358,8 +360,8 @@ export function renderHistory(root) {
         over && m.income ? h('span', { class: 'over', style: { bottom: hp(m.income), height: hp(over) } }) : null),
       h('span', { class: 'lbl' }, monthShortName(m.key)));
   }));
-  view.append(h('div', { class: 'chart', role: 'group', 'aria-label': 'Einnahmen und Ausgaben pro Monat' }, chart),
-    h('div', { class: 'chart-key' }, h('span', {}, h('i', { class: 'k-inc' }), 'Einnahmen'), h('span', {}, h('i', { class: 'k-out' }), 'Ausgaben und Sparen'), h('span', {}, h('i', { class: 'k-kept' }), 'Übrig')));
+  view.append(h('section', { class: 'card' }, h('div', { class: 'chart', role: 'group', 'aria-label': 'Einnahmen und Ausgaben pro Monat' }, chart),
+    h('div', { class: 'chart-key' }, h('span', {}, h('i', { class: 'k-inc' }), 'Einnahmen'), h('span', {}, h('i', { class: 'k-out' }), 'Ausgaben und Sparen'), h('span', {}, h('i', { class: 'k-kept' }), 'Übrig'))));
 
   // Categories: average per month against this month.
   if (avg.months > 0) {

@@ -91,7 +91,7 @@ export function renderSettings(root, sub) {
   const s = app.state;
   const view = h('main', { class: 'view narrow', id: 'main' });
   root.append(view);
-  view.append(h('div', { class: 'top top-row' }, h('a', { class: 'ibtn', href: '#/', 'aria-label': 'Zurück zum Monat', style: { marginLeft: '-10px' } }, icon('back')), h('span')));
+  view.append(h('div', { class: 'top split-top' }, h('a', { class: 'ibtn', href: '#/', 'aria-label': 'Zurück zum Monat' }, icon('back')), h('span', { class: 'inline-title', 'aria-hidden': 'true' }, 'Einstellungen'), h('span')));
   view.append(h('h1', { class: 'title' }, 'Einstellungen'));
 
   const item = (t, sub2, v, onclick, extra = '') => h('li', {}, h(onclick ? 'button' : 'div', { type: onclick ? 'button' : null, class: `item ${extra}`, onclick },
@@ -105,20 +105,19 @@ export function renderSettings(root, sub) {
   }, t)));
   view.append(h('section', { class: 'sec' }, h('div', { class: 'sec-h' }, h('h2', {}, 'Darstellung')), theme));
 
-  // Categories
+  // Categories, grouped by what they count as.
   const groups = [['expense', 'Ausgaben'], ['saving', 'Sparen'], ['income', 'Einnahmen']];
-  const catList = h('ul', { class: 'set' });
+  const catSec = h('section', { class: 'sec' }, h('div', { class: 'sec-h' }, h('h2', {}, 'Kategorien')));
   for (const [kind, label] of groups) {
-    for (const c of s.categories.filter((x) => x.kind === kind)) {
-      catList.append(item(c.name, `${label}${Object.values(FALLBACK).includes(c.id) ? ' · nimmt Buchungen gelöschter Kategorien auf' : ''}`, c.budget ? `Budget ${formatPlain(c.budget)}` : null, () => editCategory(c.id)));
-    }
+    const list = s.categories.filter((x) => x.kind === kind);
+    if (!list.length) continue;
+    catSec.append(h('p', { class: 'day-h' }, label),
+      h('ul', { class: 'set' }, list.map((c) => item(c.name, Object.values(FALLBACK).includes(c.id) ? 'Nimmt Buchungen gelöschter Kategorien auf' : null, c.budget ? `Budget ${formatPlain(c.budget)}` : null, () => editCategory(c.id)))));
   }
-  view.append(h('section', { class: 'sec' },
-    h('div', { class: 'sec-h' }, h('h2', {}, 'Kategorien'), h('span', { class: 'aside' }, `${s.categories.length}`)),
-    catList,
-    h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '16px' } },
-      h('button', { type: 'button', class: 'btn ghost small', onclick: () => newCategory('expense') }, icon('plus', 's'), 'Ausgabe-Kategorie'),
-      h('button', { type: 'button', class: 'btn ghost small', onclick: () => newCategory('income') }, icon('plus', 's'), 'Einnahme-Kategorie'))));
+  catSec.append(h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '14px' } },
+    h('button', { type: 'button', class: 'btn ghost small', onclick: () => newCategory('expense') }, icon('plus', 's'), 'Ausgabe-Kategorie'),
+    h('button', { type: 'button', class: 'btn ghost small', onclick: () => newCategory('income') }, icon('plus', 's'), 'Einnahme-Kategorie')));
+  view.append(catSec);
 
   // Data
   const last = s.settings.lastBackup;
@@ -127,7 +126,7 @@ export function renderSettings(root, sub) {
     : 'Der Browser darf die Daten löschen, wenn der Speicher knapp wird oder die Seite lange nicht geöffnet war. Eine Sicherung schützt davor.';
   const dataSec = h('section', { class: 'sec', id: 'sicherung' },
     h('div', { class: 'sec-h' }, h('h2', {}, 'Deine Daten')),
-    h('p', { class: 'hero-s', style: { marginTop: 0, marginBottom: '14px' } }, `Alles liegt nur in diesem Browser, auf diesem Gerät. Kein Konto, kein Server, niemand sonst sieht es. ${storageLine}`),
+    h('p', { class: 'hero-s', style: { margin: '0 4px 12px' } }, `Alles liegt nur in diesem Browser, auf diesem Gerät. Kein Konto, kein Server, niemand sonst sieht es. ${storageLine}`),
     h('ul', { class: 'set' },
       item('Sicherung speichern', last ? `Zuletzt am ${new Date(last).toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' })}` : 'Noch nie gesichert', null, exportBackup),
       item('Sicherung laden', 'Aus einer Geldfluss-Datei, auch von einem anderen Gerät', null, importBackup),
@@ -227,7 +226,7 @@ export function renderWelcome(root, step = 1) {
       h('h1', {}, 'Wohin fließt dein Geld?'),
       h('p', { class: 'lede' }, 'Geldfluss zeigt jeden Monat, was reinkommt, wohin es geht und was übrig bleibt. Alles bleibt in diesem Browser.'),
       h('p', { class: 'step-k' }, '1 von 2'),
-      h('label', { for: 'w-income', style: { display: 'block', fontWeight: 650, marginTop: '6px' } }, 'Wie viel bekommst du im Monat netto?'),
+      h('label', { for: 'w-income', class: 'w-q' }, 'Wie viel bekommst du im Monat netto?'),
       h('div', { class: 'w-amount' }, input, h('span', { class: 'cur', 'aria-hidden': 'true' }, '€')),
       err,
       h('div', { class: 'acts' },

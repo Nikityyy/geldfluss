@@ -1,10 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#1F3FA6"/>
-  <rect x="92" y="132" width="26" height="248" fill="#F6F3EA"/>
-  <path d="M118 132C250 132 262 112 404 112L404 190C262 190 250 206 118 206Z" fill="#F6F3EA" fill-opacity=".34"/>
-  <path d="M118 206C250 206 268 226 404 226L404 262C268 262 250 246 118 246Z" fill="#F6F3EA" fill-opacity=".34"/>
-  <path d="M118 246C250 246 266 300 404 300L404 400C266 400 250 380 118 380Z" fill="#FFD24A"/>
-  <rect x="404" y="112" width="18" height="78" fill="#F6F3EA"/>
-  <rect x="404" y="226" width="18" height="36" fill="#F6F3EA"/>
-  <rect x="404" y="300" width="18" height="100" fill="#FFD24A"/>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <rect x="100" y="120" width="22" height="272" rx="4" fill="#1C1C1E"/>
+  <path d="M122 120C260 120 270 104 412 104L412 176C270 176 260 196 122 196Z" fill="#D1D1D6"/>
+  <path d="M122 196C260 196 272 214 412 214L412 252C272 252 260 236 122 236Z" fill="#D1D1D6"/>
+  <path d="M122 236C260 236 270 296 412 296L412 408C270 408 260 392 122 392Z" fill="#FF6A13"/>
 </svg>

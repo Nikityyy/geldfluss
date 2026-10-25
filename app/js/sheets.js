@@ -1,4 +1,4 @@
-// Every form lives on the shore: a sheet that rises over the water.
+// Every form lives in a sheet that rises from the bottom.
 
 import { app, category, commit, currentMonth, viewedMonth } from './app.js';
 import { addMonths, compareMonths, dayLabel, dayOf, isDate, monthLabel, monthName, monthOf, shortDate } from './dates.js';
