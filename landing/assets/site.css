@@ -188,4 +188,4 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px 
 
 @media (max-width: 420px) { :root { --gutter: 18px; } .hero { padding-top: 48px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition-duration: .01ms !important; } }
-@media (forced-colors: active) { .btn, .bar-cta, .try-card, .steps li { border: 1px solid CanvasText; } .flow .rb, .flow .rb.left { fill: CanvasText; opacity: .5; } }
+@media (forced-colors: active) { .btn, .bar-cta, .try-card, .steps li { border: 1px solid CanvasText; } .try-amount input { outline: 1px solid CanvasText; } input[type="range"] { -webkit-appearance: auto; appearance: auto; accent-color: Highlight; } .flow .rb, .flow .rb.left { fill: CanvasText; opacity: .5; } }

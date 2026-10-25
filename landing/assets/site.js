@@ -7,7 +7,7 @@ import { formatMoney, parseAmount } from '../app/js/money.js';
 const POSTS = [
   { id: 'wohnen', name: 'Wohnen', kind: 'expense', cents: 89000, max: 250000 },
   { id: 'lebensmittel', name: 'Lebensmittel', kind: 'expense', cents: 38000, max: 120000 },
-  { id: 'freizeit', name: 'Freizeit und Essen gehen', kind: 'expense', cents: 26000, max: 100000 },
+  { id: 'freizeit', name: 'Freizeit, Essen', kind: 'expense', cents: 26000, max: 100000 },
   { id: 'abos', name: 'Abos und Handy', kind: 'expense', cents: 8500, max: 40000 },
   { id: 'mobil', name: 'Mobilität', kind: 'expense', cents: 9800, max: 80000 },
   { id: 'sparen', name: 'Sparen', kind: 'saving', cents: 30000, max: 150000 },

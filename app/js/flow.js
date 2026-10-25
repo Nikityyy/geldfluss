@@ -44,7 +44,7 @@ export function flowData(summary) {
  */
 export function layout(data, { width, target = 300 }) {
   const k = target / data.total;
-  const sinkX = Math.round(Math.max(116, Math.min(width * 0.4, width - 200)));
+  const sinkX = Math.round(Math.max(96, Math.min(width * 0.4, width - 200)));
   const barW = 6;
   const armW = 5;
 
@@ -123,7 +123,7 @@ export function mountFlow(host, summary, { onPick, animate = true } = {}) {
   const labels = new Map();
   const srcBars = [];
 
-  const width = () => Math.max(280, host.clientWidth || 340);
+  const width = () => Math.max(220, host.clientWidth || 340);
   let L = layout(data, { width: width() });
 
   for (const s of L.sources) {
