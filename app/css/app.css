@@ -263,7 +263,8 @@ svg { display: block; }
   opacity: 0;
   transition: opacity .2s;
 }
-.inline-title { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); font-weight: 600; font-size: var(--t-body); white-space: nowrap; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 52%; overflow: hidden; text-overflow: ellipsis; }
+.inline-title { position: absolute; left: var(--m); bottom: 16px; font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -.02em; white-space: nowrap; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 2 * var(--m) - 170px); overflow: hidden; text-overflow: ellipsis; }
+.top.split-top .inline-title { left: 50%; transform: translateX(-50%); font-family: var(--font); font-size: var(--t-body); font-weight: 600; letter-spacing: -.01em; }
 html.scrolled .top::before, html.scrolled .inline-title { opacity: 1; }
 html.scrolled .top .ibtn, html.scrolled .top .capsule { box-shadow: none; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .top.split-top { justify-content: space-between; }
@@ -375,7 +376,7 @@ html.scrolled .top .ibtn, html.scrolled .top .capsule { box-shadow: none; backgr
 
 .rows { list-style: none; background: var(--raised); border-radius: var(--r); overflow: hidden; }
 .rows > li { position: relative; }
-.rows > li + li::before { content: ""; position: absolute; z-index: 1; left: var(--pad); right: 0; top: 0; border-top: .5px solid var(--rule); }
+.rows > li + li::before { content: ""; position: absolute; z-index: 2; left: var(--pad); right: 0; top: 0; border-top: .5px solid var(--rule); }
 .row {
   position: relative;
   width: 100%;
@@ -716,3 +717,11 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 
 /* Rows sit inside clipped groups, so their focus ring is drawn inside. */
 .row:focus-visible, .set .item:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--tint); border-radius: 12px; }
+
+/* Swipe actions behind a row. */
+.rows > li.swipe { overflow: hidden; }
+.swipe-act { position: absolute; top: 0; right: 0; bottom: 0; width: 88px; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; background: var(--neg); color: #fff; font-weight: 600; font-size: var(--t-2); }
+.swipe-act.soft { background: #8E8E93; }
+.swipe .row { background: var(--raised); z-index: 1; }
+@media (hover: hover) { .swipe .row:hover { background: color-mix(in srgb, var(--raised), var(--ink) 4%); } }
+.swipe .row:active { background: color-mix(in srgb, var(--raised), var(--ink) 6%); }

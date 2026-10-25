@@ -3,10 +3,10 @@
 import { app, category, commit, currentMonth, go } from './app.js';
 import { addMonths, compareMonths, dayLabel, dayOf, daysInMonth, monthIndex, monthLabel, monthName, monthOf, monthShortName } from './dates.js';
 import { describeFlow, mountFlow } from './flow.js';
-import { averages, firstMonth, fixedOverview, insight, INTERVALS, series, summarize } from './model.js';
+import { averages, deleteEntry, firstMonth, fixedOverview, insight, INTERVALS, series, setOccurrence, summarize } from './model.js';
 import { formatMoney, formatPercent, formatPlain, formatRound, splitMoney } from './money.js';
 import { nextDueLabel, openCategory, openEntry, openOccurrence, openRecurring } from './sheets.js';
-import { h, icon, roll } from './ui.js';
+import { h, icon, roll, swipeAction } from './ui.js';
 import { openExplain } from './settings.js';
 
 const DAY = 86_400_000;
@@ -144,7 +144,14 @@ export function renderMonth(root, key, { animate }) {
         const ul = h('ul', { class: 'rows' });
         for (const it of g.items) {
           if (shown >= max) break;
-          ul.append(h('li', {}, itemRow(it, key)));
+          const row = itemRow(it, key);
+          const li = h('li', {}, row);
+          if (it.kind === 'entry') {
+            swipeAction(li, row, { label: 'Löschen', run: () => commit(deleteEntry(app.state, it.id), { message: `${it.note || category(it.categoryId)?.name || 'Eintrag'} gelöscht.` }) });
+          } else {
+            swipeAction(li, row, { label: 'Aussetzen', soft: true, run: () => commit(setOccurrence(app.state, it.recurringId, key, { skip: true }), { message: `${it.note} im ${monthName(key)} ausgesetzt.` }) });
+          }
+          ul.append(li);
           shown += 1;
         }
         list.append(h('div', { class: 'day' }, h('h3', { class: 'day-h n' }, h('span', {}, dayLabel(g.date, app.today), g.date > app.today ? ' · geplant' : ''), dayTotal ? h('span', {}, formatPlain(dayTotal)) : null), ul));

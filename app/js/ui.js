@@ -230,3 +230,65 @@ export async function saveFile(name, text, type) {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
   return 'downloaded';
 }
+
+// ---------------------------------------------------------------------------
+// Swipe a row to the left to reveal one action, as in iOS lists. A short
+// swipe opens it, a long one runs it. Vertical scrolling stays untouched.
+
+let openSwipe = null;
+
+export function swipeAction(li, row, { label, run, soft = false }) {
+  const btn = h('button', { type: 'button', class: `swipe-act${soft ? ' soft' : ''}`, tabindex: '-1', 'aria-hidden': 'true' }, label);
+  li.classList.add('swipe');
+  li.prepend(btn);
+  btn.style.visibility = 'hidden';
+  const W = 88;
+  let x0 = null;
+  let y0 = null;
+  let dx = 0;
+  let base = 0;
+  let mode = null; // null until we know: 'x' or 'y'
+  const set = (x, anim) => {
+    row.style.transition = anim ? 'transform .32s var(--spring)' : 'none';
+    row.style.transform = x ? `translateX(${x}px)` : '';
+    btn.style.width = `${Math.max(W, -x)}px`;
+    btn.style.visibility = x ? 'visible' : 'hidden';
+  };
+  const close = () => { set(0, true); base = 0; if (openSwipe === close) openSwipe = null; };
+  btn.addEventListener('click', () => { close(); run(); });
+  row.addEventListener('touchstart', (e) => {
+    if (openSwipe && openSwipe !== close) openSwipe();
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; mode = null;
+  }, { passive: true });
+  row.addEventListener('touchmove', (e) => {
+    if (x0 == null) return;
+    const mx = e.touches[0].clientX - x0;
+    const my = e.touches[0].clientY - y0;
+    if (!mode) {
+      if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+      mode = Math.abs(mx) > Math.abs(my) * 1.3 ? 'x' : 'y';
+    }
+    if (mode !== 'x') return;
+    e.preventDefault();
+    dx = Math.min(0, base + mx);
+    const max = li.clientWidth;
+    set(dx < -max * 0.6 ? dx : Math.max(dx, -max), false);
+  }, { passive: false });
+  const end = () => {
+    if (x0 == null) return;
+    x0 = null;
+    if (mode !== 'x') return;
+    const max = li.clientWidth;
+    if (dx < -max * 0.55) { set(-max, true); haptic(); setTimeout(run, 180); return; }
+    if (dx < -W / 2) { set(-W, true); base = -W; openSwipe = close; } else close();
+  };
+  row.addEventListener('touchend', end);
+  row.addEventListener('touchcancel', end);
+  // A tap on an open row closes it instead of opening the item.
+  row.addEventListener('click', (e) => {
+    if (base !== 0) { e.preventDefault(); e.stopImmediatePropagation(); close(); }
+  }, true);
+}
+
+// iOS only shows :active on elements when the page listens for touches.
+document.addEventListener('touchstart', () => {}, { passive: true });
