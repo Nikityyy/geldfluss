@@ -181,7 +181,7 @@ function categoryRow(r, sum, key) {
       left > 0 ? h('b', { style: { left: `calc(${spentPct}% + 2px)`, right: '0' } }) : null);
   }
   const sub = [
-    c.kind === 'saving' ? 'Sparen' : null,
+    c.kind === 'saving' && c.name !== 'Sparen' ? 'Sparen' : null,
     `${r.count} ${r.count === 1 ? 'Buchung' : 'Buchungen'}`,
     c.budget ? `Budget ${formatRound(c.budget)}` : null,
     r.planned ? `${formatPlain(r.planned)} geplant` : null,

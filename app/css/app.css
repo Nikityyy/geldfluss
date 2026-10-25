@@ -690,10 +690,13 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   .brand { display: flex; position: fixed; z-index: 21; top: 16px; left: max(24px, calc(50% - 560px)); height: 52px; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; letter-spacing: -.02em; text-decoration: none; }
   .brand svg { width: 30px; height: 30px; }
   .view { max-width: 1120px; padding: 84px 24px 120px; }
-  .top { position: static; margin: 0; padding: 0; }
+  .view { position: relative; }
+  .top { position: absolute; top: 84px; right: 24px; margin: 0; padding: 0; min-height: 0; }
+  .top.split-top { left: 24px; }
+  .view:has(> .top.split-top) { padding-top: 140px; }
   .top::before, .inline-title { display: none; }
   .view.month { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 0 28px; align-items: start; }
-  .view.month > .top, .view.month > .title { grid-column: 1 / -1; }
+  .view.month > .title { grid-column: 1 / -1; }
   .view.month .col-b .sec:first-child { margin-top: 16px; }
   .view.narrow { max-width: 760px; }
 }
