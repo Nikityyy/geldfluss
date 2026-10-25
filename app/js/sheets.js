@@ -138,7 +138,7 @@ export function openEntry({ entry = null, type = 'expense', categoryId = null } 
   const date = h('input', { class: 'input n', type: 'date', value: entry?.date || defaultDate(), required: true });
   const notes = [...new Set(app.state.entries.slice(-300).map((e) => e.note).filter(Boolean))].slice(-60);
   const listId = `notes-${Date.now()}`;
-  const note = h('input', { class: 'input', type: 'text', value: entry?.note || '', maxlength: '200', placeholder: 'Zum Beispiel Billa oder Kino', list: listId, autocomplete: 'off', enterkeyhint: 'done' });
+  const note = h('input', { class: 'input', type: 'text', value: entry?.note || '', maxlength: '200', placeholder: 'Optional', list: listId, autocomplete: 'off', enterkeyhint: 'done' });
   note.setAttribute('list', listId);
   const datalist = h('datalist', { id: listId }, notes.map((n) => h('option', { value: n })));
   const repeat = h('input', { type: 'checkbox', role: 'switch' });

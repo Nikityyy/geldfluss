@@ -189,7 +189,7 @@ function categoryRow(r, sum, key) {
 function itemRow(it, key) {
   const c = category(it.categoryId);
   const title = it.note || c?.name || '';
-  const sub = [it.note ? c?.name : null, it.kind === 'recurring' && it.overridden ? 'nur diesen Monat geändert' : null].filter(Boolean).join(' · ');
+  const sub = [it.note && it.note !== c?.name ? c?.name : null, it.kind === 'recurring' && it.overridden ? 'nur diesen Monat geändert' : null].filter(Boolean).join(' · ');
   return h('button', {
     type: 'button',
     class: `row${it.planned ? ' planned' : ''}`,
@@ -280,7 +280,7 @@ export function renderFixed(root) {
 function fixedRow({ r, category: c, monthly, cents }, opts) {
   const interval = INTERVALS.find((i) => i.every === r.every)?.label || 'Monatlich';
   const due = !opts.ended ? nextDueLabel(r) : null;
-  const sub = [c?.name, r.every === 1 ? `am ${r.day}.` : `${interval}, ${formatMoney(cents)}`, opts.ended ? `bis ${monthLabel(r.end)}` : opts.upcoming ? `ab ${monthLabel(r.start)}` : r.every > 1 && due ? `nächstes Mal ${due}` : r.end ? `bis ${monthLabel(r.end)}` : null].filter(Boolean).join(' · ');
+  const sub = [c?.name !== r.name ? c?.name : null, r.every === 1 ? `am ${r.day}.` : `${interval}, ${formatMoney(cents)}`, opts.ended ? `bis ${monthLabel(r.end)}` : opts.upcoming ? `ab ${monthLabel(r.start)}` : r.every > 1 && due ? `nächstes Mal ${due}` : r.end ? `bis ${monthLabel(r.end)}` : null].filter(Boolean).join(' · ');
   return h('li', {}, h('button', { type: 'button', class: 'row', onclick: () => openRecurring({ recurring: r, from: opts.upcoming ? r.start : currentMonth() }) },
     h('span', { class: 't' }, r.name),
     h('span', { class: 'v' }, `${r.type === 'income' ? '+' : ''}${formatPlain(monthly)}`),
