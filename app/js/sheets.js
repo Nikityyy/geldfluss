@@ -132,6 +132,7 @@ export function openEntry({ entry = null, type = 'expense', categoryId = null } 
     kind = v;
     chips.reset(v, lastCategory(v));
     title.textContent = v === 'income' ? 'Neue Einnahme' : 'Neue Ausgabe';
+    amount.input.focus();
   }, 'Art');
 
   const date = h('input', { class: 'input n', type: 'date', value: entry?.date || defaultDate(), required: true });
@@ -244,6 +245,7 @@ export function openRecurring({ recurring = null, type = 'expense', from = null 
     kind = v;
     chips.reset(v, v === 'income' ? 'gehalt' : 'wohnen');
     name.placeholder = v === 'income' ? 'Zum Beispiel Gehalt' : 'Zum Beispiel Miete';
+    name.focus();
   }, 'Art');
   const every = h('select', { class: 'select', 'aria-label': 'Wie oft' }, INTERVALS.map((i) => h('option', { value: String(i.every) }, i.label)));
   every.value = String(r?.every || 1);
