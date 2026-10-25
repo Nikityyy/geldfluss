@@ -1,0 +1,25 @@
+{
+  "name": "Geldfluss",
+  "short_name": "Geldfluss",
+  "description": "Sieh, wohin dein Geld fließt: Einnahmen, Fixkosten, Ausgaben und was übrig bleibt.",
+  "lang": "de",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1F3FA6",
+  "theme_color": "#1F3FA6",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Eintragen", "url": "./#/neu", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Fixkosten", "url": "./#/fixkosten" }
+  ]
+}

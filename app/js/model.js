@@ -329,18 +329,20 @@ export function insight(state, summary, today) {
   const prev = [];
   for (let i = 1; i <= 6; i++) prev.push(summarize(state, addMonths(summary.key, -i), today));
   const withData = prev.filter((p) => p.out > 0);
-  if (withData.length >= 3 && (summary.past || (summary.current && dayOf(today) >= 20))) {
+  // A running month can only be said to be above its average, not below.
+  if (withData.length >= 3 && (summary.past || summary.current)) {
     let best = null;
     for (const row of summary.expenses) {
-      if (row.cents < 3000) continue;
+      if (row.cents < 5000) continue;
       const avg = withData.reduce((sum, p) => sum + (p.expenses.find((r) => r.category.id === row.category.id)?.cents || 0), 0) / withData.length;
       if (avg < 2000) continue;
       const ratio = row.cents / avg - 1;
-      if (Math.abs(ratio) >= 0.25 && (!best || Math.abs(ratio) > Math.abs(best.ratio))) best = { row, ratio };
+      if (summary.current && ratio < 0) continue;
+      if (Math.abs(ratio) >= 0.25 && Math.abs(row.cents - avg) >= 3000 && (!best || Math.abs(ratio) > Math.abs(best.ratio))) best = { row, ratio };
     }
     if (best) {
       const pct = Math.round(Math.abs(best.ratio) * 100);
-      return `${best.row.category.name} liegt ${pct} % ${best.ratio > 0 ? 'über' : 'unter'} deinem Schnitt.`;
+      return `${best.row.category.name} liegt ${summary.current ? 'schon ' : ''}${pct} % ${best.ratio > 0 ? 'über' : 'unter'} deinem Schnitt.`;
     }
   }
   const base = summary.income > 0 ? summary.income : summary.out;

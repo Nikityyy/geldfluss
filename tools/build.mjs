@@ -34,7 +34,11 @@ async function walk(dir) {
 
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
-await cp(join(root, 'landing'), out, { recursive: true });
+try {
+  await cp(join(root, 'landing'), out, { recursive: true, filter: (src) => !/[\\/](DIRECTION|CRITIQUE)\.md$/.test(src) });
+} catch (err) {
+  if (err.code !== 'ENOENT') throw err;
+}
 await cp(join(root, 'app'), join(out, 'app'), { recursive: true });
 await writeFile(join(out, '.nojekyll'), '');
 
