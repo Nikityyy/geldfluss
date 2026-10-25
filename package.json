@@ -1,0 +1,13 @@
+{
+  "name": "geldfluss",
+  "private": true,
+  "description": "Einnahmen und Ausgaben als Fluss: eine kostenlose, lokale Haushaltsbuch-Web-App.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test tests/",
+    "build": "node tools/build.mjs",
+    "serve": "node tools/serve.mjs"
+  }
+}

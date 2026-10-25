@@ -1,0 +1,11 @@
+# Build output and local checks
+_site/
+shots/
+node_modules/
+*.log
+
+# Editors and systems
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
