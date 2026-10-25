@@ -71,7 +71,7 @@ app.render = ({ animate = false } = {}) => {
     root.append(h('button', {
       type: 'button', class: 'fab', 'aria-keyshortcuts': 'n',
       onclick: () => (isFixed ? import('./sheets.js').then((m) => m.openRecurring()) : openEntry()),
-    }, icon('plus'), isFixed ? 'Fixposten' : 'Eintrag'));
+    }, icon('plus'), h('span', { class: 'lbl' }, isFixed ? 'Fixposten' : 'Eintrag')));
   }
 
   const titles = { fixed: 'Fixkosten · Geldfluss', history: 'Verlauf · Geldfluss', settings: 'Einstellungen · Geldfluss' };

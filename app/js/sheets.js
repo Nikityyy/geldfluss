@@ -347,7 +347,7 @@ export function openCategory(categoryId, key, members = null) {
     type: 'button', class: `row${it.planned ? ' planned' : ''}`,
     onclick: () => { s.close(); setTimeout(() => (it.kind === 'recurring' ? openOccurrence(it.recurringId, key) : openEntry({ entry: app.state.entries.find((e) => e.id === it.id) })), 300); },
   },
-  h('span', { class: 't' }, it.note || category(it.categoryId)?.name || '', it.kind === 'recurring' ? h('span', { class: 'tag' }, 'fix') : null),
+  h('span', { class: 't' }, h('span', { class: 'nm' }, it.note || category(it.categoryId)?.name || ''), it.kind === 'recurring' ? h('span', { class: 'tag' }, 'fix') : null),
   h('span', { class: 'v' }, `${it.type === 'income' ? '+' : ''}${formatPlain(it.cents)}`),
   h('span', { class: 's' }, `${it.planned ? 'geplant · ' : ''}${dayLabel(it.date, app.today)}${single ? '' : ` · ${category(it.categoryId)?.name}`}`)))) : h('li', {}, h('p', { class: 'help', style: { padding: '12px 0' } }, `Im ${monthName(key)} noch nichts in ${single?.name || 'diesen Kategorien'}.`)));
 

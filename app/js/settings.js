@@ -283,16 +283,16 @@ export function renderWelcome(root, step = 1) {
 function welcomeArt() {
   // The flow in miniature: one stream, five arms, the last one kept.
   const div = h('div');
-  div.innerHTML = `<svg viewBox="0 0 400 172" aria-hidden="true">
-    <rect x="20" y="18" width="6" height="114" fill="var(--ink)"/>
-    <path d="M26 18C150 18 150 8 250 8L250 44C150 44 150 53 26 53Z" fill="var(--stream)"/>
-    <path d="M26 53C150 53 150 54 250 54L250 70C150 70 150 69 26 69Z" fill="var(--stream)"/>
-    <path d="M26 69C150 69 150 80 250 80L250 92C150 92 150 81 26 81Z" fill="var(--stream)"/>
-    <path d="M26 81C150 81 150 102 250 102L250 110C150 110 150 89 26 89Z" fill="var(--stream)"/>
-    <path d="M26 89C150 89 150 122 250 122L250 165C150 165 150 132 26 132Z" fill="var(--accent)"/>
-    <rect x="250" y="8" width="5" height="36" fill="var(--ink)"/><rect x="250" y="54" width="5" height="16" fill="var(--ink)"/>
-    <rect x="250" y="80" width="5" height="12" fill="var(--ink)"/><rect x="250" y="102" width="5" height="8" fill="var(--ink)"/>
-    <rect x="250" y="122" width="5" height="43" fill="var(--accent)"/>
+  div.innerHTML = `<svg viewBox="0 0 400 176" aria-hidden="true">
+    <rect x="20" y="22" width="6" height="120" fill="var(--ink)"/>
+    <path d="M26 22C200 22 200 6 374 6L374 44C200 44 200 58 26 58Z" fill="var(--stream)"/>
+    <path d="M26 58C200 58 200 56 374 56L374 72C200 72 200 74 26 74Z" fill="var(--stream)"/>
+    <path d="M26 74C200 74 200 84 374 84L374 96C200 96 200 86 26 86Z" fill="var(--stream)"/>
+    <path d="M26 86C200 86 200 108 374 108L374 116C200 116 200 94 26 94Z" fill="var(--stream)"/>
+    <path d="M26 94C200 94 200 128 374 128L374 176C200 176 200 142 26 142Z" fill="var(--accent)"/>
+    <rect x="374" y="6" width="5" height="38" fill="var(--ink)"/><rect x="374" y="56" width="5" height="16" fill="var(--ink)"/>
+    <rect x="374" y="84" width="5" height="12" fill="var(--ink)"/><rect x="374" y="108" width="5" height="8" fill="var(--ink)"/>
+    <rect x="374" y="128" width="5" height="48" fill="var(--accent)"/>
   </svg>`;
   return div.firstChild;
 }

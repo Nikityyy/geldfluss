@@ -41,7 +41,7 @@
   --on-accent: #132056;
   --neg: #FF9F8C;
   --neg-shore: #B3261E;
-  --glass: rgba(19, 32, 86, .46);
+  --glass: rgba(19, 32, 86, .74);
   --glass-hi: rgba(246, 243, 234, .16);
   --backdrop: rgba(6, 12, 40, .48);
 
@@ -88,7 +88,7 @@
     --on-accent: #0C1846;
     --neg: #FF9F8C;
     --neg-shore: #FF9F8C;
-    --glass: rgba(21, 30, 69, .62);
+    --glass: rgba(21, 30, 69, .8);
     --glass-hi: rgba(236, 234, 226, .12);
     --backdrop: rgba(2, 5, 20, .62);
   }
@@ -116,7 +116,7 @@
   --on-accent: #0C1846;
   --neg: #FF9F8C;
   --neg-shore: #FF9F8C;
-  --glass: rgba(21, 30, 69, .62);
+  --glass: rgba(21, 30, 69, .8);
   --glass-hi: rgba(236, 234, 226, .12);
   --backdrop: rgba(2, 5, 20, .62);
 }
@@ -167,13 +167,15 @@ img { display: block; max-width: 100%; }
 }
 
 /* The tab bar: a floating glass capsule. Native behaviour, the river's look. */
+/* The dock: the tab bar and, beside it, the one action, like iOS 26 places
+   search. Nothing floats over the content of the month. */
 .tabbar {
+  --dock: min(calc(100% - 2 * var(--m)), 430px);
   position: fixed;
   z-index: 20;
-  left: 50%;
+  left: calc(50% - var(--dock) / 2);
   bottom: calc(var(--safe-b) + 16px);
-  transform: translateX(-50%);
-  width: min(calc(100% - 40px), 380px);
+  width: calc(var(--dock) - var(--tab-h) - 10px);
   height: var(--tab-h);
   border-radius: 31px;
   background: var(--glass);
@@ -205,13 +207,15 @@ img { display: block; max-width: 100%; }
 
 /* The primary action: shore on water, in the thumb zone. */
 .fab {
+  --dock: min(calc(100% - 2 * var(--m)), 430px);
   position: fixed;
-  z-index: 19;
-  right: max(var(--m), calc(50% - 280px + var(--m)));
-  bottom: calc(var(--safe-b) + 16px + var(--tab-h) + 14px);
-  height: 52px;
-  padding: 0 22px 0 18px;
-  border-radius: 26px;
+  z-index: 20;
+  right: calc(50% - var(--dock) / 2);
+  bottom: calc(var(--safe-b) + 16px);
+  width: var(--tab-h);
+  height: var(--tab-h);
+  justify-content: center;
+  border-radius: 31px;
   background: var(--shore);
   color: var(--shore-ink);
   font-weight: 700;
@@ -223,7 +227,8 @@ img { display: block; max-width: 100%; }
   transition: transform .15s var(--spring-soft);
 }
 .fab:active { transform: scale(.96); }
-.fab .icon { width: 22px; height: 22px; stroke-width: 2.2; }
+.fab .icon { width: 26px; height: 26px; stroke-width: 2.2; }
+.fab .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* ---------------------------------------------------------------- top rows and titles */
 
@@ -299,6 +304,7 @@ img { display: block; max-width: 100%; }
 .flow-in b { color: var(--ink); font-weight: 600; }
 .flow-in .neg { color: var(--neg); }
 .flow { position: relative; touch-action: pan-y; }
+.flow-cap { margin-top: 18px; font-size: var(--t-2); color: var(--ink-2); max-width: 36ch; text-wrap: pretty; }
 .flow svg { position: absolute; inset: 0; overflow: visible; }
 .flow .rb { fill: var(--stream); transition: fill .2s; }
 .flow .rb.saving { fill: url(#hatch); }
@@ -354,7 +360,9 @@ img { display: block; max-width: 100%; }
 }
 .rows > li:last-child .row { border-bottom: .5px solid var(--rule); }
 button.row:hover, a.row:hover { background: linear-gradient(90deg, transparent, var(--glass-hi) 20%, var(--glass-hi) 80%, transparent); }
-.row .t { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .t { font-weight: 600; display: flex; align-items: baseline; min-width: 0; }
+.row .t .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.row .t .tag { flex: none; }
 .row .v { font-variant-numeric: tabular-nums lining-nums; text-align: right; white-space: nowrap; font-weight: 500; }
 .row .v.in { color: var(--ink); }
 .row .s { font-size: var(--t-meta); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -362,7 +370,7 @@ button.row:hover, a.row:hover { background: linear-gradient(90deg, transparent, 
 .row .s2.warn { color: var(--neg); }
 .row .s2.ok { color: var(--accent); }
 .row.planned .t, .row.planned .v { color: var(--ink-2); }
-.tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); border: .5px solid var(--rule-strong); border-radius: 5px; padding: 1px 5px 0; margin-left: 6px; vertical-align: 2px; }
+.tag { display: inline-block; font-size: var(--t-meta); font-weight: 600; color: var(--ink-2); border: .5px solid var(--rule-strong); border-radius: 6px; padding: 0 6px; margin-left: 8px; vertical-align: 1px; line-height: 1.35; }
 
 /* A budget as a narrow stream: spent in ink, what is left of it in accent. */
 .budget { grid-column: 1 / -1; height: 4px; margin-top: 8px; border-radius: 2px; background: var(--rule); position: relative; overflow: hidden; }
@@ -591,7 +599,7 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   position: fixed;
   z-index: 60;
   left: 50%;
-  bottom: calc(var(--safe-b) + 16px + var(--tab-h) + 14px + 52px + 12px);
+  bottom: calc(var(--safe-b) + 16px + var(--tab-h) + 14px);
   transform: translate(-50%, 12px);
   opacity: 0;
   width: max-content;
@@ -653,7 +661,10 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   .tabbar { top: 18px; bottom: auto; left: auto; right: max(24px, calc(50% - 560px)); transform: none; width: 360px; height: 52px; border-radius: 26px; padding: 0 4px; }
   .tabbar a { flex-direction: row; height: 44px; font-size: var(--t-2); gap: 8px; border-radius: 22px; }
   .tabbar a .icon { width: 20px; height: 20px; }
-  .fab { bottom: 28px; right: max(24px, calc(50% - 560px)); }
+  .fab { bottom: 28px; right: max(24px, calc(50% - 560px)); width: auto; height: 52px; padding: 0 22px 0 18px; border-radius: 26px; }
+  .fab .icon { width: 22px; height: 22px; }
+  .fab .lbl { position: static; width: auto; height: auto; clip-path: none; }
+  .view > .top:first-child, .view .col-a > .top:first-child { margin-top: 56px; }
   .toast { bottom: 96px; }
   .brand { display: flex !important; }
   .view { max-width: 1120px; padding: 18px 24px 120px; }
@@ -661,7 +672,6 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   .view.month .col-b { padding-top: 72px; }
   .view.month .col-b .sec:first-child { margin-top: 20px; }
   .view.narrow { max-width: 760px; }
-  .view .top-row { margin-top: 56px; }
 }
 .brand { display: none; position: fixed; z-index: 21; top: 18px; left: max(24px, calc(50% - 560px)); height: 52px; align-items: center; gap: 10px; font-weight: 750; font-size: 19px; letter-spacing: -.01em; text-decoration: none; }
 .brand svg { width: 30px; height: 30px; }
@@ -679,4 +689,5 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   .tabbar, .fab, .btn, .chip, .toast { border: 1px solid CanvasText; }
   .tabbar a[aria-current="page"] { outline: 2px solid Highlight; }
   .budget i, .budget b, .col .bars span { background: CanvasText; }
+  .flow-label { border: 1px solid CanvasText; border-radius: 6px; padding: 0 8px; }
 }

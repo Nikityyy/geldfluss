@@ -70,10 +70,9 @@ export function renderMonth(root, key, { animate }) {
   const sub = [];
   if (sum.current && sum.planned > 0) {
     const nextItem = sum.items.filter((i) => i.planned && i.type !== 'income').at(-1);
-    sub.push(`${formatMoney(sum.planned)} an Fixkosten kommen noch und sind schon abgezogen${nextItem ? `. Als Nächstes: ${nextItem.note || category(nextItem.categoryId)?.name} am ${dayOf(nextItem.date)}.` : '.'}`);
+    sub.push(`Noch fällige Fixkosten sind eingerechnet: ${formatMoney(sum.planned)}${nextItem ? `, als Nächstes ${nextItem.note || category(nextItem.categoryId)?.name} am ${dayOf(nextItem.date)}.` : '.'}`);
   }
   const ins = !empty ? insight(s, sum, app.today) : null;
-  if (ins) sub.push(ins);
 
   if (!empty || hasAny) {
     colA.append(h('section', { class: 'hero', 'aria-label': 'Übersicht' },
@@ -103,7 +102,7 @@ export function renderMonth(root, key, { animate }) {
       sum.left < 0 ? h('span', { class: 'neg' }, `Fehlt `, h('b', { class: 'neg' }, formatPlain(-sum.left))) : null,
       sum.income === 0 ? h('span', {}, 'Noch keine Einnahmen') : null);
     const host = h('div', { role: 'img', 'aria-label': describeFlow(sum) });
-    colA.append(h('section', { class: 'flow-wrap', 'aria-label': 'Geldfluss' }, incomeLine, host));
+    colA.append(h('section', { class: 'flow-wrap', 'aria-label': 'Geldfluss' }, incomeLine, host, ins ? h('p', { class: 'flow-cap' }, ins) : null));
     requestAnimationFrame(() => {
       resizeFlow = mountFlow(host, sum, {
         animate,
@@ -196,7 +195,7 @@ function itemRow(it, key) {
     class: `row${it.planned ? ' planned' : ''}`,
     onclick: () => (it.kind === 'recurring' ? openOccurrence(it.recurringId, key) : openEntry({ entry: app.state.entries.find((e) => e.id === it.id) })),
   },
-  h('span', { class: 't' }, title, it.kind === 'recurring' ? h('span', { class: 'tag' }, 'fix') : null),
+  h('span', { class: 't' }, h('span', { class: 'nm' }, title), it.kind === 'recurring' ? h('span', { class: 'tag' }, 'fix') : null),
   h('span', { class: `v${it.type === 'income' ? ' in' : ''}` }, `${it.type === 'income' ? '+' : ''}${formatPlain(it.cents)}`),
   sub ? h('span', { class: 's' }, sub) : null);
 }
